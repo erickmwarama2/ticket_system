@@ -8,13 +8,35 @@ export default function ticketReducer(state, action) {
         tickets: state.tickets.map((ticket) =>
           ticket.id === action.payload.id ? action.payload : ticket
         ),
+        editingTicket: null,
       };
     case "DELETE_TICKET":
+      if (state.editingTicket && state.editingTicket.id === action.payload.id) {
+        return {
+          ...state,
+          tickets: state.tickets.filter(
+            (ticket) => ticket.id !== action.payload.id
+          ),
+          editingTicket: null,
+        };
+      }
+
       return {
         ...state,
         tickets: state.tickets.filter(
           (ticket) => ticket.id !== action.payload.id
         ),
+      };
+
+    case "SET_EDITING_TICKET":
+      return {
+        ...state,
+        editingTicket: action.payload,
+      };
+    case "CLEAR_EDITING_TICKET":
+      return {
+        ...state,
+        editingTicket: null,
       };
     default:
       return state;
